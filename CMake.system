@@ -1,1 +1,4 @@
-CMake.dx7-lehtola
+INCLUDE_DIRECTORIES("../usr/include/")
+LINK_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/../usr/lib/")
+add_definitions(-DARMA_64BIT_WORD -DARMA_BLAS_LONG)
+set(LAPACK_LIBRARY armadillo gsl gslcblas lapack blas m)
