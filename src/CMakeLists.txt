@@ -12,6 +12,31 @@ add_library(legendre legendre/accuracy.f90 legendre/input_output.f90
   legendre/Associated_Legendre_Functions.f90 legendre/Ass_Leg_Poly.f90
   legendre/Legendre_Wrapper.f90 general/legendretable.cpp)
 
+add_library(helfem-atomic SHARED
+  # helfem:
+  general/polynomial.cpp general/polynomial_basis.cpp
+  general/gaunt.cpp general/chebyshev.cpp general/diis.cpp
+  general/lbfgs.cpp general/utils.cpp general/spherical_harmonics.cpp
+  general/timer.cpp general/elements.cpp general/lobatto.cpp
+  general/angular.cpp general/scf_helpers.cpp general/lcao.cpp
+  general/gsz.cpp
+  # legendre:
+  legendre/accuracy.f90 legendre/input_output.f90
+  legendre/itoc.f90 legendre/Matrix_Print.f90 legendre/Data_Module.f90
+  legendre/Special_Functions.f90 legendre/Auxilliary_Subroutines.f90
+  legendre/Prolate_Functions.f90 legendre/Lentz_Thompson.f90
+  legendre/Associated_Legendre_Functions.f90 legendre/Ass_Leg_Poly.f90
+  legendre/Legendre_Wrapper.f90 general/legendretable.cpp
+  # atomic:
+  atomic/basis.cpp atomic/quadrature.cpp
+  # C-interface:
+  atomic/interface.cc
+)
+target_link_libraries(helfem-atomic gsl ${LAPACK_LIBRARY} rt)
+
+add_executable(libhelfem-test atomic/libhelfem-test.cc)
+target_link_libraries(libhelfem-test helfem-atomic)
+
 add_executable(legendre_test legendre/legendre_test.cpp)
 target_link_libraries(legendre_test helfem legendre)
 target_link_libraries(legendre_test gsl ${LAPACK_LIBRARY} rt)
