@@ -17,6 +17,7 @@
 #include "polynomial_basis.h"
 #include "polynomial.h"
 #include "orthpoly.h"
+#include "helfem.h"
 #include <cfloat>
 
 // Legendre polynomials
@@ -56,13 +57,15 @@ namespace helfem {
       case(1):
       case(2):
         poly=new HermiteBasis(Nnodes,primbas);
-      printf("Basis set composed of %i nodes with %i:th derivative continuity.\n",Nnodes,primbas);
-      printf("This means using primitive polynomials of order %i.\n",Nnodes*(primbas+1)-1);
+      if(helfem::verbose) {
+        printf("Basis set composed of %i nodes with %i:th derivative continuity.\n",Nnodes,primbas);
+        printf("This means using primitive polynomials of order %i.\n",Nnodes*(primbas+1)-1);
+      }
       break;
 
       case(3):
         poly=new polynomial_basis::LegendreBasis(Nnodes,primbas);
-        printf("Basis set composed of %i-node spectral elements.\n",Nnodes);
+        if(helfem::verbose) printf("Basis set composed of %i-node spectral elements.\n",Nnodes);
         break;
 
       case(4):
@@ -70,7 +73,7 @@ namespace helfem {
           arma::vec x, w;
           ::lobatto_compute(Nnodes,x,w);
           poly=new polynomial_basis::LIPBasis(x,primbas);
-          printf("Basis set composed of %i-node LIPs with Gauss-Lobatto nodes.\n",Nnodes);
+          if(helfem::verbose) printf("Basis set composed of %i-node LIPs with Gauss-Lobatto nodes.\n",Nnodes);
           break;
         }
 

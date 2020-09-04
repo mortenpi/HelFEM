@@ -17,6 +17,7 @@
 #include "RadialPotential.h"
 #include "chebyshev.h"
 #include "quadrature.h"
+#include "helfem.h"
 
 #ifdef _OPENMP
 #include <omp.h>
@@ -36,9 +37,9 @@ RadialBasis::RadialBasis(const polynomial_basis::PolynomialBasis *poly_, int n_q
   chebyshev::chebyshev(n_quad, xq, wq);
   for (size_t i = 0; i < xq.n_elem; i++) {
     if (!std::isfinite(xq[i]))
-      printf("xq[%i]=%e\n", (int)i, xq[i]);
+      if(helfem::verbose) printf("xq[%i]=%e\n", (int)i, xq[i]);
     if (!std::isfinite(wq[i]))
-      printf("wq[%i]=%e\n", (int)i, wq[i]);
+      if(helfem::verbose) printf("wq[%i]=%e\n", (int)i, wq[i]);
   }
 
   // Evaluate polynomials at quadrature points

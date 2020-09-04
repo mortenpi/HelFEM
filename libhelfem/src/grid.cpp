@@ -24,14 +24,14 @@ arma::vec helfem::utils::get_grid(double rmax, int num_el, int igrid, double zex
   // linear grid
   case (1):
     if (helfem::verbose)
-      printf("Using linear grid\n");
+      if(helfem::verbose) printf("Using linear grid\n");
     bval = arma::linspace<arma::vec>(0, rmax, num_el + 1);
     break;
 
   // quadratic grid (Schweizer et al 1999)
   case (2):
     if (helfem::verbose)
-      printf("Using quadratic grid\n");
+      if(helfem::verbose) printf("Using quadratic grid\n");
     bval.zeros(num_el + 1);
     for (int i = 0; i <= num_el; i++)
       bval(i) = i * i * rmax / (num_el * num_el);
@@ -40,7 +40,7 @@ arma::vec helfem::utils::get_grid(double rmax, int num_el, int igrid, double zex
   case (3):
     // generalized polynomial grid, monotonic decrease till zexp~3, after that fails to work
     if (helfem::verbose)
-      printf("Using generalized polynomial grid, zexp = %e\n", zexp);
+      if(helfem::verbose) printf("Using generalized polynomial grid, zexp = %e\n", zexp);
     bval.zeros(num_el + 1);
     for (int i = 0; i <= num_el; i++)
       bval(i) = rmax * std::pow(i * 1.0 / num_el, zexp);
@@ -49,7 +49,7 @@ arma::vec helfem::utils::get_grid(double rmax, int num_el, int igrid, double zex
   // generalized exponential grid, monotonic decrease till zexp~2, after that fails to work
   case (4):
     if (helfem::verbose)
-      printf("Using generalized exponential grid, zexp = %e\n", zexp);
+      if(helfem::verbose) printf("Using generalized exponential grid, zexp = %e\n", zexp);
     bval = arma::exp(arma::pow(arma::linspace<arma::vec>(
                                    0, std::pow(log(rmax + 1), 1.0 / zexp), num_el + 1),
                                zexp)) -

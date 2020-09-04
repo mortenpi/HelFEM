@@ -14,6 +14,7 @@
  * of the License, or (at your option) any later version.
  */
 #include "utils.h"
+#include "helfem.h"
 #include <cmath>
 
 extern "C" {
@@ -119,7 +120,7 @@ namespace helfem {
       teiwrk-=tei;
       double jilknorm(arma::norm(teiwrk,"fro"));
 
-      printf("%e %e %e\n",jinorm,lknorm,jilknorm);
+      if(helfem::verbose) printf("%e %e %e\n",jinorm,lknorm,jilknorm);
     }
 
     arma::mat exchange_tei(const arma::mat & tei, size_t Ni, size_t Nj, size_t Nk, size_t Nl) {
@@ -168,7 +169,7 @@ namespace helfem {
         if(!arma::eig_sym(Sval,Svec,S)) {
           throw std::logic_error("Diagonalization of overlap matrix failed\n");
         }
-        printf("Smallest eigenvalue of overlap matrix is % e, condition number %e\n",Sval(0),Sval(Sval.n_elem-1)/Sval(0));
+        if(helfem::verbose) printf("Smallest eigenvalue of overlap matrix is % e, condition number %e\n",Sval(0),Sval(Sval.n_elem-1)/Sval(0));
 
         Sinvh=Svec*arma::diagmat(arma::pow(Sval,-0.5))*arma::trans(Svec);
       }
