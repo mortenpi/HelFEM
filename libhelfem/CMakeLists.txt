@@ -1,4 +1,4 @@
-set(LIBHELFEM_VERSION "v0.0.2-alpha1")
+set(LIBHELFEM_VERSION "v0.0.1")
 
 # Version information
 configure_file("include/helfem.source.h" "include/helfem.h")
