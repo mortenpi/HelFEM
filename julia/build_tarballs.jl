@@ -15,7 +15,7 @@
 #
 using BinaryBuilder, Pkg
 
-name = "libhelfem"
+name = "HelFEM"
 version = v"0.0.1"
 sources = [
     DirectorySource(abspath(joinpath(@__DIR__, ".."))),
