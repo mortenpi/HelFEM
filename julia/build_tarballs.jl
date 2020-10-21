@@ -19,18 +19,10 @@ name = "libhelfem"
 version = v"0.0.1"
 sources = [
     DirectorySource(abspath(joinpath(@__DIR__, ".."))),
-    # # The ArchiveSource is replaced with a DirectorySource if a local clone of the HelFEM
-    # # repository is used.
-    # if haskey(ENV, "USE_LOCAL_HELFEM")
-    #     @warn "Using local clone of HelFEM"
-    #     @assert isdir(joinpath(@__DIR__, "HelFEM"))
-    #     DirectorySource("./HelFEM", target="HelFEM")
-    # else
-    #     ArchiveSource(
-    #         "https://github.com/mortenpi/HelFEM/archive/v$(HelFEM_version).tar.gz",
-    #         "3f1da9f1ef5f20d4c8c31eed28598f6119e64497b2102110205c07a9e01a6a70"
-    #     )
-    # end,
+    # In the Yggdrasil script, this should be replaced with
+    #
+    #   GitSource("https://github.com/mortenpi/HelFEM", "<commit sha>")
+    #
 ]
 
 script = raw"""
