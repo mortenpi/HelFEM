@@ -16,7 +16,7 @@
 using BinaryBuilder, Pkg
 
 name = "libhelfem"
-version = v"0.0.2"
+version = v"0.0.1"
 sources = [
     DirectorySource(abspath(joinpath(@__DIR__, ".."))),
     # # The ArchiveSource is replaced with a DirectorySource if a local clone of the HelFEM
