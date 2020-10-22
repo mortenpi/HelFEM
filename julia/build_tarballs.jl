@@ -66,24 +66,18 @@ make -C build/ install
 """
 
 # These are the platforms the libcxxwrap_julia_jll is built on.
-pfkwarg = (; cxxstring_abi = "cxx11")
+#
+# The libgfortran constraint is necessary because the default is libgfortran 3, but the
+# Julia_jll is only available for libgfortran 4.
 platforms = [
-    # x86_64-linux-gnu-cxx11
-    Platform("x86_64", "linux"; libc="glibc", pfkwarg...),
-    # i686-linux-gnu-cxx11
-    Platform("i686", "linux"; libc="glibc", pfkwarg...),
-    # armv7l-linux-gnueabihf-cxx11
-    Platform("armv7l", "linux"; libc="glibc", pfkwarg...),
-    # aarch64-linux-gnu-cxx11
-    Platform("aarch64", "linux"; libc="glibc", pfkwarg...),
-    # x86_64-apple-darwin14-cxx11
-    Platform("x86_64", "macos"; pfkwarg...),
-    # x86_64-w64-mingw32-cxx11
-    Platform("x86_64", "windows"; pfkwarg...),
-    # i686-w64-mingw32-cxx11
-    Platform("i686", "windows"; pfkwarg...),
-    # x86_64-unknown-freebsd11.1-cxx11
-    Platform("x86_64", "freebsd"; pfkwarg...),
+    Platform("x86_64", "linux"; libc="glibc", cxxstring_abi = "cxx11", libgfortran_version=v"4"),
+    Platform("i686", "linux"; libc="glibc", cxxstring_abi = "cxx11", libgfortran_version=v"4"),
+    Platform("armv7l", "linux"; libc="glibc", cxxstring_abi = "cxx11", libgfortran_version=v"4"),
+    Platform("aarch64", "linux"; libc="glibc", cxxstring_abi = "cxx11", libgfortran_version=v"4"),
+    Platform("x86_64", "macos", libgfortran_version=v"4"),
+    Platform("x86_64", "windows"; cxxstring_abi = "cxx11", libgfortran_version=v"4"),
+    Platform("i686", "windows"; cxxstring_abi = "cxx11", libgfortran_version=v"4"),
+    Platform("x86_64", "freebsd", libgfortran_version=v"4"),
 ]
 
 products = [
@@ -91,7 +85,7 @@ products = [
 ]
 
 dependencies = [
-    BuildDependency(PackageSpec(name = "Julia_jll",version = "1.4.1")),
+    BuildDependency(PackageSpec(name = "Julia_jll", version = "1.4.1")),
     Dependency(PackageSpec(name = "libcxxwrap_julia_jll", version = "0.8.0")),
     Dependency(PackageSpec(name = "armadillo_jll", version = "9.850.1")),
     Dependency(PackageSpec(name = "GSL_jll", version = "2.6.0")),
@@ -100,23 +94,21 @@ dependencies = [
 
 #=!YGG=#
 build_helfem(args) = mktempdir() do path
-    @info "Building in $path"
+    @info "Building in $path" args
     cd(path) do
         build_tarballs(
             args, name, version, sources, script, platforms, products, dependencies,
-            preferred_gcc_version = v"7.1.0",
+            #preferred_gcc_version = v"7.1.0",
         )
     end
 end
-build_helfem() = build_helfem(split("--verbose --deploy=local x86_64-linux-gnu-cxx11"))
+build_helfem(args::AbstractString) = build_helfem(split(args))
+build_helfem() = build_helfem("--verbose --deploy=local $(triplet(platforms[1]))")
 if isinteractive()
     @info "Running is interactive mode (-i passed). Skipping build_tarballs(), run build_helfem()"
 else
     build_helfem(ARGS)
 end
 #=YGG
-build_tarballs(
-    ARGS, name, version, sources, script, platforms, products, dependencies,
-    preferred_gcc_version = v"7.1.0",
-)
+build_tarballs(ARGS, name, version, sources, script, platforms, products, dependencies)
 YGG=#
