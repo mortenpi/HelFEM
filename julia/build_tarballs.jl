@@ -41,6 +41,13 @@ else
     OPENBLAS="${libdir}/libopenblas.${dlext}"
 fi
 
+# On i686, it seems that we need to explicitly tell GCC that we want SSE2. Refs:
+#   https://github.com/JuliaLang/julia/blob/v1.4.1/src/atomics.h#L8-L10
+#   https://stackoverflow.com/questions/16410149/error-sse2-instruction-set-not-enabled-when-including-emmintrin-h
+if [[ "${target}" == i686* ]]; then
+    export CXXFLAGS="-msse -msse2 -msse3"
+fi
+
 # Compile libhelfem as a static library
 cd ${WORKSPACE}/srcdir/HelFEM/
 cmake \

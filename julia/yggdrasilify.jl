@@ -2,6 +2,7 @@ using LibGit2
 
 let
     head = LibGit2.head(joinpath(@__DIR__, "..", ".git"))
+    @info "Using Git hash: $head"
     lines = readlines(joinpath(@__DIR__, "build_tarballs.jl"))
     mode = :plain
     ygg_lines = filter(lines) do line
