@@ -1,3 +1,4 @@
+#=!YGG
 # Modes:
 #
 # * julia --project build_tarballs.jl --verbose --devdir=dev --deploy=local
@@ -13,20 +14,21 @@
 # * julia --project -i -e'using Revise; includet("build_tarballs.jl")'
 #   Interactive mode, with Revise also called on the main file.
 #
+# !YGG=#
 using BinaryBuilder, Pkg
 
 name = "HelFEM"
 version = v"0.0.1"
 sources = [
-    DirectorySource(abspath(joinpath(@__DIR__, ".."))),
-    # In the Yggdrasil script, this should be replaced with
-    #
-    #   GitSource("https://github.com/mortenpi/HelFEM", "<commit sha>")
-    #
+    #=!YGG: use the checked out directory as the HelFEM source =#
+    DirectorySource(abspath(joinpath(@__DIR__, "..")), target="HelFEM"),
+    #=YGG: In the Yggdrasil script, this should be replaced with:
+    GitSource("https://github.com/mortenpi/HelFEM.git", "<commit sha>")
+    YGG=#
 ]
 
 script = raw"""
-cp -v ${WORKSPACE}/srcdir/julia/CMake.system ${WORKSPACE}/srcdir/CMake.system
+cp -v ${WORKSPACE}/srcdir/HelFEM/julia/CMake.system ${WORKSPACE}/srcdir/HelFEM/CMake.system
 
 # Set up some platform specific CMake configuration. This is more or less borrowed from
 # the Armadillo build_tarballs.jl script:
@@ -40,7 +42,7 @@ else
 fi
 
 # Compile libhelfem as a static library
-cd ${WORKSPACE}/srcdir
+cd ${WORKSPACE}/srcdir/HelFEM/
 cmake \
     -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TARGET_TOOLCHAIN} -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
@@ -53,7 +55,7 @@ make -C build/ install
 install_license LICENSE
 
 # Compile the CxxWrap wrapper as a shared library
-cd ${WORKSPACE}/srcdir/julia
+cd ${WORKSPACE}/srcdir/HelFEM/julia
 cmake \
     -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TARGET_TOOLCHAIN} -DCMAKE_BUILD_TYPE=Release \
     -DBLAS_LIBRARIES=${OPENBLAS} \
@@ -64,24 +66,24 @@ make -C build/ install
 """
 
 # These are the platforms the libcxxwrap_julia_jll is built on.
-pfkwarg = (; compiler_abi = CompilerABI(cxxstring_abi=:cxx11))
+pfkwarg = (; cxxstring_abi = "cxx11")
 platforms = [
     # x86_64-linux-gnu-cxx11
-    Linux(:x86_64; libc=:glibc, pfkwarg...),
+    Platform("x86_64", "linux"; libc="glibc", pfkwarg...),
     # i686-linux-gnu-cxx11
-    Linux(:i686; libc=:glibc, pfkwarg...),
+    Platform("i686", "linux"; libc="glibc", pfkwarg...),
     # armv7l-linux-gnueabihf-cxx11
-    Linux(:armv7l; libc=:glibc, pfkwarg...),
+    Platform("armv7l", "linux"; libc="glibc", pfkwarg...),
     # aarch64-linux-gnu-cxx11
-    Linux(:aarch64; libc=:glibc, pfkwarg...),
+    Platform("aarch64", "linux"; libc="glibc", pfkwarg...),
     # x86_64-apple-darwin14-cxx11
-    MacOS(:x86_64; pfkwarg...),
+    Platform("x86_64", "macos"; pfkwarg...),
     # x86_64-w64-mingw32-cxx11
-    Windows(:x86_64; pfkwarg...),
+    Platform("x86_64", "windows"; pfkwarg...),
     # i686-w64-mingw32-cxx11
-    Windows(:i686; pfkwarg...),
+    Platform("i686", "windows"; pfkwarg...),
     # x86_64-unknown-freebsd11.1-cxx11
-    FreeBSD(:x86_64; pfkwarg...),
+    Platform("x86_64", "freebsd"; pfkwarg...),
 ]
 
 products = [
@@ -96,6 +98,7 @@ dependencies = [
     Dependency(PackageSpec(name = "OpenBLAS_jll", version = "0.3.9")),
 ]
 
+#=!YGG=#
 build_helfem(args) = mktempdir() do path
     @info "Building in $path"
     cd(path) do
@@ -106,9 +109,14 @@ build_helfem(args) = mktempdir() do path
     end
 end
 build_helfem() = build_helfem(split("--verbose --deploy=local x86_64-linux-gnu-cxx11"))
-
 if isinteractive()
     @info "Running is interactive mode (-i passed). Skipping build_tarballs(), run build_helfem()"
 else
     build_helfem(ARGS)
 end
+#=YGG
+build_tarballs(
+    ARGS, name, version, sources, script, platforms, products, dependencies,
+    preferred_gcc_version = v"7.1.0",
+)
+YGG=#
