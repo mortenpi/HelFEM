@@ -73,18 +73,15 @@ make -C build/ install
 """
 
 # These are the platforms the libcxxwrap_julia_jll is built on.
-#
-# The libgfortran constraint is necessary because the default is libgfortran 3, but the
-# Julia_jll is only available for libgfortran 4.
 platforms = [
-    Platform("x86_64", "linux"; libc="glibc", cxxstring_abi = "cxx11", libgfortran_version=v"4"),
-    Platform("i686", "linux"; libc="glibc", cxxstring_abi = "cxx11", libgfortran_version=v"4"),
-    Platform("armv7l", "linux"; libc="glibc", cxxstring_abi = "cxx11", libgfortran_version=v"4"),
-    Platform("aarch64", "linux"; libc="glibc", cxxstring_abi = "cxx11", libgfortran_version=v"4"),
-    Platform("x86_64", "macos", libgfortran_version=v"4"),
-    Platform("x86_64", "windows"; cxxstring_abi = "cxx11", libgfortran_version=v"4"),
-    Platform("i686", "windows"; cxxstring_abi = "cxx11", libgfortran_version=v"4"),
-    Platform("x86_64", "freebsd", libgfortran_version=v"4"),
+    Platform("x86_64", "linux"; libc="glibc", cxxstring_abi = "cxx11"),
+    Platform("i686", "linux"; libc="glibc", cxxstring_abi = "cxx11"),
+    Platform("armv7l", "linux"; libc="glibc", cxxstring_abi = "cxx11"),
+    Platform("aarch64", "linux"; libc="glibc", cxxstring_abi = "cxx11"),
+    Platform("x86_64", "macos"),
+    Platform("x86_64", "windows"; cxxstring_abi = "cxx11"),
+    Platform("i686", "windows"; cxxstring_abi = "cxx11"),
+    Platform("x86_64", "freebsd"),
 ]
 
 products = [
@@ -99,13 +96,14 @@ dependencies = [
     Dependency(PackageSpec(name = "OpenBLAS_jll", version = "0.3.9")),
 ]
 
+# preferred_gcc_version = v"7" is a requirement from libcxxwrap_julia_jll
 #=!YGG=#
 build_helfem(args) = mktempdir() do path
     @info "Building in $path" args
     cd(path) do
         build_tarballs(
-            args, name, version, sources, script, platforms, products, dependencies,
-            #preferred_gcc_version = v"7.1.0",
+            args, name, version, sources, script, platforms, products, dependencies;
+            preferred_gcc_version = v"7",
         )
     end
 end
@@ -117,5 +115,5 @@ else
     build_helfem(ARGS)
 end
 #=YGG
-build_tarballs(ARGS, name, version, sources, script, platforms, products, dependencies)
+build_tarballs(ARGS, name, version, sources, script, platforms, products, dependencies; preferred_gcc_version = v"7")
 YGG=#
