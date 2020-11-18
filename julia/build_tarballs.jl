@@ -1,7 +1,7 @@
 #=!YGG
 # Modes:
 #
-# * julia --project build_tarballs.jl --verbose --devdir=dev --deploy=local
+# * julia --project build_tarballs.jl --verbose --deploy=local --output-jll=dev/HelFEM_jll
 #   Non-interactive local build. Can also add --debug to drop into the debug shell on
 #   failure.
 #
@@ -73,6 +73,7 @@ make -C build/ install
 """
 
 # These are the platforms the libcxxwrap_julia_jll is built on.
+#=!YGG: to build on Linux, use the x86_64-linux-gnu-cxx11 triplet =#
 platforms = [
     Platform("x86_64", "linux"; libc="glibc", cxxstring_abi = "cxx11"),
     Platform("i686", "linux"; libc="glibc", cxxstring_abi = "cxx11"),
