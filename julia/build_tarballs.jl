@@ -1,7 +1,7 @@
 #=!YGG
 # Modes:
 #
-# * julia --project build_tarballs.jl --verbose --deploy=local --output-jll=dev/HelFEM_jll
+# * julia --project build_tarballs.jl --verbose --deploy=local --output-jll=$PWD/dev/HelFEM_jll
 #   Non-interactive local build. Can also add --debug to drop into the debug shell on
 #   failure.
 #
@@ -18,7 +18,7 @@
 using BinaryBuilder, Pkg
 
 name = "HelFEM"
-version = v"0.0.1"
+version = v"0.0.2"
 sources = [
     #=!YGG: use the checked out directory as the HelFEM source =#
     DirectorySource(abspath(joinpath(@__DIR__, "..")), target="HelFEM"),
