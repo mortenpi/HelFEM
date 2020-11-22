@@ -45,10 +45,10 @@ namespace helfem {
     /**
      * Form radial grid for a calculation, ranging from r=0 to r=rmax.
      *
-     * igrid: 0 for linear grid
-     *        1 for quadratic grid
-     *        2 for generalized polynomial grid with exponent zexp
-     *        3 for generalized exponential grid with parameter zexp
+     * igrid: 1 for linear grid
+     *        2 for quadratic grid
+     *        3 for generalized polynomial grid with exponent zexp
+     *        4 for generalized exponential grid with parameter zexp
      */
     arma::vec get_grid(double rmax, int num_el, int igrid, double zexp);
 
