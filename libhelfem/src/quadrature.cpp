@@ -15,7 +15,6 @@
  */
 #include "quadrature.h"
 #include "erfc_expn.h"
-#include "chebyshev.h"
 #include "polynomial.h"
 #include "utils.h"
 

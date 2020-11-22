@@ -66,6 +66,7 @@ namespace helfem {
 #include "helfem/PolynomialBasis.h"
 #include "helfem/RadialBasis.h"
 #include "helfem/SphericalNucleus.h"
+#include "helfem/chebyshev.h"
 
 namespace helfem {
   namespace polynomial_basis {

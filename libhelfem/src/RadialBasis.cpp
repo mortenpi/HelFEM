@@ -15,7 +15,7 @@
  */
 #include "helfem/RadialBasis.h"
 #include "RadialPotential.h"
-#include "chebyshev.h"
+#include "helfem/chebyshev.h"
 #include "quadrature.h"
 #include "helfem.h"
 
