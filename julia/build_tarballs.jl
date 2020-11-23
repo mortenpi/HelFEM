@@ -73,7 +73,8 @@ make -C build/ install
 """
 
 # These are the platforms the libcxxwrap_julia_jll is built on.
-#=!YGG: to build on Linux, use the x86_64-linux-gnu-cxx11 triplet =#
+#=!YGG: to build on Linux, use the x86_64-linux-gnu-cxx11 triplet
+!YGG=#
 platforms = [
     Platform("x86_64", "linux"; libc="glibc", cxxstring_abi = "cxx11"),
     Platform("i686", "linux"; libc="glibc", cxxstring_abi = "cxx11"),
