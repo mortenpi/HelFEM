@@ -14,8 +14,8 @@
  * of the License, or (at your option) any later version.
  */
 #include "angular.h"
-#include "chebyshev.h"
-#include "lobatto.h"
+#include <helfem/chebyshev.h>
+#include <helfem/lobatto.h>
 
 namespace helfem {
   namespace angular {
@@ -33,7 +33,7 @@ namespace helfem {
 	Phi spacing is
       */
       double dphi=2.0*M_PI/nphi;
-      
+
       for(size_t i=0;i<xcth0.n_elem;i++)
         for(int j=0;j<nphi;j++) {
           // Global index

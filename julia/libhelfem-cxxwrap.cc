@@ -40,6 +40,7 @@ JLCXX_MODULE define_julia_module(jlcxx::Module& mod)
     mod.method("get_grid", &helfem::utils::get_grid);
     mod.method("invh", &helfem::utils::invh);
     mod.method("chebyshev", &helfem::chebyshev::chebyshev);
+    mod.method("lobatto", &lobatto_compute);
 
     mod.add_type<helfem::modelpotential::ModelPotential>("ModelPotential")
         .method("V", static_cast<double (helfem::modelpotential::ModelPotential::*)(double) const>(&helfem::modelpotential::ModelPotential::V));

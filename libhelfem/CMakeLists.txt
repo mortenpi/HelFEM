@@ -12,6 +12,7 @@ list(APPEND LIBHELFEM_PUBLIC_HEADERS
     "RadialBasis.h"
     "SphericalNucleus.h"
     "chebyshev.h"
+    "lobatto.h"
 )
 foreach(header IN LISTS LIBHELFEM_PUBLIC_HEADERS)
     configure_file("include/${header}" "include/helfem/${header}" COPYONLY)
