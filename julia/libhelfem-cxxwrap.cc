@@ -4,13 +4,6 @@
 #include <armadillo>
 #include <helfem.h>
 
-auto helfem_basis(int nnodes, int nelem, int primbas, double rmax, int igrid, double zexp, int nquad) {
-    helfem::polynomial_basis::PolynomialBasis * poly = helfem::polynomial_basis::get_basis(primbas, nnodes);
-    if(nquad <= 0) nquad = 5 * poly->get_nbf();
-    arma::vec grid = helfem::utils::get_grid(rmax, nelem, igrid, zexp);
-    return helfem::atomic::basis::RadialBasis(poly, nquad, grid);
-}
-
 namespace jlcxx
 {
   template<> struct SuperType<helfem::modelpotential::PointNucleus> { typedef helfem::modelpotential::ModelPotential type; };
@@ -81,8 +74,12 @@ JLCXX_MODULE define_julia_module(jlcxx::Module& mod)
         .method("get_r", &helfem::atomic::basis::RadialBasis::get_r);
 
     mod.method("polynomial_basis", [] (const int primbas, const int nnodes) {
-        //return std::unique_ptr<helfem::polynomial_basis::PolynomialBasis>(helfem::polynomial_basis::get_basis(primbas, nnodes));
         return jlcxx::julia_owned(helfem::polynomial_basis::get_basis(primbas, nnodes));
     });
-    mod.method("basis", &helfem_basis);
+    mod.method("basis", [] (int nnodes, int nelem, int primbas, double rmax, int igrid, double zexp, int nquad) {
+        helfem::polynomial_basis::PolynomialBasis * poly = helfem::polynomial_basis::get_basis(primbas, nnodes);
+        if(nquad <= 0) nquad = 5 * poly->get_nbf();
+        arma::vec grid = helfem::utils::get_grid(rmax, nelem, igrid, zexp);
+        return helfem::atomic::basis::RadialBasis(poly, nquad, grid);
+    });
 }

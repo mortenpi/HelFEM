@@ -18,7 +18,7 @@
 using BinaryBuilder, Pkg
 
 name = "HelFEM"
-version = v"0.0.2"
+version = v"0.0.3"
 sources = [
     #=!YGG: use the checked out directory as the HelFEM source =#
     DirectorySource(abspath(joinpath(@__DIR__, "..")), target="HelFEM"),
